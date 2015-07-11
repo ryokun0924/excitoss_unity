@@ -184,10 +184,10 @@ function idleDisturbance(x:int){
     if(x>0){
         for( var childTransform:Transform in  transform){
                 if( childTransform.GetComponent(successDetect).inRightBox == true){
-                    if(childTransform.position.y < 100){
+                    if(childTransform.position.y < 200){
                         rand = Random.Range(0,2);
                         if(rand==0){
-                        childTransform.GetComponent(Rigidbody).AddForce(0,1000000,0);
+                        childTransform.GetComponent(Rigidbody).AddForce(0,2000000,0);
                     }
                     }
                 }
@@ -197,10 +197,10 @@ function idleDisturbance(x:int){
     else{
         for( var childTransform:Transform in  transform){
                 if( childTransform.GetComponent(successDetect).inLeftBox == true){
-                        if(childTransform.position.y < 100){
+                        if(childTransform.position.y < 200){
                             rand = Random.Range(0,2);
                             if(rand==0){
-                            childTransform.GetComponent(Rigidbody).AddForce(0,1000000,0);
+                            childTransform.GetComponent(Rigidbody).AddForce(0,2000000,0);
                         }
                         }
                 }

@@ -74,13 +74,13 @@ function Update () {
         if(!isInsideBox(transform.position,"right")){
                     GameObject.Find("main").GetComponent(main).rightSuccessBall -- ;
                     inRightBox = false;
-                    outFlag = false;
+                    outFlag = true;
 
     }else if(inLeftBox){
         if(!isInsideBox(transform.position,"left")){
                     GameObject.Find("main").GetComponent(main).leftSuccessBall -- ;
                     inLeftBox = false;
-                    outFlag = false;
+                    outFlag = true;
                 }
 
     }
