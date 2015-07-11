@@ -1,14 +1,20 @@
 ﻿#pragma strict
 var movTexture : MovieTexture;
-function Start () {
-    GetComponent.<Renderer>().material.mainTexture = movTexture;
-	movTexture.Play();
-}
 var flag:boolean = false;
 var openingEndFlag:boolean = false;
 
+var defaultCameraY:int;
+
 //切り替わったcameraが指定位置に到達したか
 var isCameraCorrectPosition:boolean = true;
+
+function Start () {
+    GetComponent.<Renderer>().material.mainTexture = movTexture;
+	movTexture.Play();
+        defaultCameraY = 756;
+}
+
+
 function Update () {
     if(!movTexture.isPlaying){
 //         while(!flag){
@@ -33,11 +39,11 @@ function Update () {
         isCameraCorrectPosition = false;
         }
         if(!isCameraCorrectPosition){
-            GameObject.Find("RightCamera").GetComponent(Camera).transform.position.y -= 25;
-            GameObject.Find("LeftCamera").GetComponent(Camera).transform.position.y -= 25;
-            if(GameObject.Find("RightCamera").GetComponent(Camera).transform.position.y <621){
-                GameObject.Find("RightCamera").GetComponent(Camera).transform.position.y = 621;
-                GameObject.Find("LeftCamera").GetComponent(Camera).transform.position.y = 621;
+            GameObject.Find("RightCamera").GetComponent(Camera).transform.position.y -= Time.deltaTime * 1500;
+            GameObject.Find("LeftCamera").GetComponent(Camera).transform.position.y -= Time.deltaTime * 1500;
+            if(GameObject.Find("RightCamera").GetComponent(Camera).transform.position.y <defaultCameraY){
+                GameObject.Find("RightCamera").GetComponent(Camera).transform.position.y = defaultCameraY;
+                GameObject.Find("LeftCamera").GetComponent(Camera).transform.position.y = defaultCameraY;
                 isCameraCorrectPosition = true;
             }
         }

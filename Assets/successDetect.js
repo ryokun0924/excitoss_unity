@@ -13,7 +13,7 @@ var boundingHeight:int ;
 var outFlag:boolean = false;
 
 
-
+var suicaBall : Rigidbody;
 
 var rectangleLine:Vector3[];
 var pointLine:Vector3[];
@@ -31,13 +31,15 @@ function Update () {
         velocity = rigidBody.velocity;
         velocityValue = Mathf.Sqrt(velocity.x * velocity.x + velocity.y * velocity.y + velocity.z * velocity.z);
         if( velocityValue < 7){
-
-
             stopFlag = true;
             if( transform.position.x < 0){
                 if(isInsideBox(transform.position,"left")){
                             inLeftBox = true;
                             GameObject.Find("main").GetComponent(main).leftSuccessBall++;
+                            if((GameObject.Find("main").GetComponent(main).leftSuccessBall  % 100 ) == 0 ){
+                                suicaBall = Instantiate(suicaBall,transform.position,transform.rotation);
+                                suicaBall.transform.position = Vector3(-1350,400,0);
+                            }
                             if ( transform.position.y >= boundingHeight ){
                                 GameObject.Find("ballGenerator").GetComponent(BallGenerator).leftBoxFullFlag = true;
                             }
@@ -48,6 +50,10 @@ function Update () {
                 if(isInsideBox(transform.position,"right")){
                             inRightBox = true;
                             GameObject.Find("main").GetComponent(main).rightSuccessBall++;
+                            if((GameObject.Find("main").GetComponent(main).rightSuccessBall  % 100 ) == 0 ){
+                                suicaBall = Instantiate(suicaBall,transform.position,transform.rotation);
+                                suicaBall.transform.position = Vector3(1350,400,0);
+                            }
                             if ( transform.position.y >= boundingHeight ){
                                 GameObject.Find("ballGenerator").GetComponent(BallGenerator).rightBoxFullFlag = true;
                             }
@@ -70,21 +76,25 @@ function Update () {
 
     //箱から飛び出たかどうか検知
     if(!outFlag){
+        if(inLeftBox){
+            if(!isInsideBox(transform.position,"left")){
+                        GameObject.Find("main").GetComponent(main).leftSuccessBall -- ;
+
+                        inLeftBox = false;
+                        outFlag = true;
+                    }
+
+        }
+    }
     if(inRightBox){
         if(!isInsideBox(transform.position,"right")){
                     GameObject.Find("main").GetComponent(main).rightSuccessBall -- ;
+
                     inRightBox = false;
                     outFlag = true;
 
-    }else if(inLeftBox){
-        if(!isInsideBox(transform.position,"left")){
-                    GameObject.Find("main").GetComponent(main).leftSuccessBall -- ;
-                    inLeftBox = false;
-                    outFlag = true;
-                }
-
     }
-}
+
 }
 }
 

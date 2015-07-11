@@ -3,7 +3,10 @@ import UnityEngine.UI;
 
 var score:GUIText;
 
+
+
 var showFlag:boolean = false;
+var createFlag:boolean = false;
 
 function Start () {
     score = GetComponent("GUIText");

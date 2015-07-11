@@ -3,6 +3,8 @@ import UnityEngine.UI;
 
 var score:GUIText;
 var showFlag:boolean = false;
+
+
 function Start () {
     score =  GetComponent("GUIText");
     score.color=Color.white;
@@ -18,5 +20,4 @@ function Update () {
 if(Input.GetKey("s")){
     showFlag = !showFlag;
 }
-
 }

@@ -42,7 +42,7 @@ function Update () {
         position= Input.mousePosition;
 
         position.z = 10f;
-        createX  = Random.Range(1150,1500);
+        createX  = Random.Range(1000,1700);
         createBall(createX);
 
     }
@@ -50,11 +50,10 @@ function Update () {
         position = Input.mousePosition;
 
         position.z = 10f;
-        createX = Random.Range(-1500,-1150);
+        createX = Random.Range(-1700,-1000);
         createBall(createX);
 
     }
-
 
     var generateFlag :boolean =  GetComponent(OSCReceiver).oscFlag;
     var x:int  = GetComponent(OSCReceiver).x ;
@@ -101,11 +100,11 @@ function createBall(x:int){
     //var pos:int = Random.Range(-320,320);
     var newBall = Instantiate(ball,transform.position,transform.rotation);
     newBall.transform.parent = transform;
-    newBall.transform.position = Vector3(x,200,-500);
+    newBall.transform.position = Vector3(x,200,-700);
     if( x > 0 ){
-    newBall.velocity = Vector3((rightBoxX-x)/2 ,200,400);
+    newBall.velocity = Vector3((rightBoxX-x)/3 ,400,270);
     }else{
-    newBall.velocity = Vector3((leftBoxX-x)/2,200,400);
+    newBall.velocity = Vector3((leftBoxX-x)/3,400,270);
     }
 
     var color:int;
