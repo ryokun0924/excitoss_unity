@@ -35,23 +35,19 @@ function Update () {
 
         position.z = 10f;
         var createX :int = Random.Range(-2000,2000);
-        createBall(createX);
+        createBall(createX,true);
 
     }
     if(Input.GetKey("m")){
-        position= Input.mousePosition;
 
-        position.z = 10f;
         createX  = Random.Range(1000,1700);
-        createBall(createX);
+        createBall(createX,true);
 
     }
     if(Input.GetKey("n")){
-        position = Input.mousePosition;
 
-        position.z = 10f;
         createX = Random.Range(-1700,-1000);
-        createBall(createX);
+        createBall(createX,true);
 
     }
 
@@ -63,12 +59,12 @@ function Update () {
         if(generateFlag == true){
                 if(GetComponent(OSCReceiver).whichKinect == "r"){
                 x = convertPositionKinectToRed(x);
-                createBall(x);
+                createBall(x,GetComponent(OSCReceiver).isGoodRythm);
                 GetComponent(OSCReceiver).oscFlag = false;
                 }
                 else if(GetComponent(OSCReceiver).whichKinect == "b"){
                 x = convertPositionKinectToBlue(x);
-                createBall(x);
+                createBall(x,GetComponent(OSCReceiver).isGoodRythm);
                 GetComponent(OSCReceiver).oscFlag = false;
                 }
                 else if(GetComponent(OSCReceiver).whichKinect == "i"){
@@ -92,22 +88,37 @@ function Update () {
         idleDisturbance(-200);
 
     }
-
+    if(Input.GetKey("k")){
+        createX = Random.Range(1000,1700);
+        createBall(createX,false);
+    }
+    if(Input.GetKey("j")){
+        createX = Random.Range(-1700,-1000);
+        createBall(createX,false);
+    }
 
 
 }
 
-function createBall(x:int){
+function createBall(x:int , isSuccess:boolean){
     //var pos:int = Random.Range(-320,320);
     var newBall = Instantiate(ball,transform.position,transform.rotation);
     newBall.transform.parent = transform;
     newBall.transform.position = Vector3(x,200,-700);
-    if( x > 0 ){
-    newBall.velocity = Vector3((rightBoxX-x)/3 ,400,270);
+    if(isSuccess){
+        if( x > 0 ){
+        newBall.velocity = Vector3((rightBoxX-x)/3 ,400,270);
+        }else{
+        newBall.velocity = Vector3((leftBoxX-x)/3,400,270);
+        }
     }else{
-    newBall.velocity = Vector3((leftBoxX-x)/3,400,270);
-    }
+        if( x > 0 ){
+        newBall.velocity = Vector3((rightBoxX-x)/3 + Random.Range(-300,300) ,400+ Random.Range(-200,200),270+ Random.Range(-100,100));
+        }else{
+        newBall.velocity = Vector3((leftBoxX-x)/3 + Random.Range(-300,300) ,400+ Random.Range(-200,200),270+ Random.Range(-100,100));
+        }
 
+    }
     var color:int;
     var rand:int = Random.Range(0,20);
     if ( x >= 0 ){
