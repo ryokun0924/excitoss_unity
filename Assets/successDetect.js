@@ -8,7 +8,7 @@ var inLeftBox:boolean = false;
 var inRightBox:boolean = false;
 
 //玉を小さくする基準たかさ
-var boundingHeight:int ;
+var boundingHeight:int;
 
 var outFlag:boolean = false;
 
@@ -18,9 +18,20 @@ var suicaBall : Rigidbody;
 var rectangleLine:Vector3[];
 var pointLine:Vector3[];
 
+var blueHundredScore :GUIText;
+var redHundredScore :GUIText;
+
+var showStartTime:float;
+var showHundredScoreFlag:boolean = false;
+var showHundredScore:int;
 
 
 function Start(){
+    redHundredScore = GameObject.Find("redHundredScore").GetComponent(GUIText);
+    redHundredScore.color=Color.white;
+    blueHundredScore = GameObject.Find("blueHundredScore").GetComponent(GUIText);
+    blueHundredScore.color=Color.white;
+
     boundingHeight =  GameObject.Find("leftBox").transform.FindChild("front").transform.lossyScale.y ;
     rectangleLine  = new Vector3[4];
     pointLine = new  Vector3[4];
@@ -38,7 +49,12 @@ function Update () {
                             GameObject.Find("main").GetComponent(main).leftSuccessBall++;
                             if((GameObject.Find("main").GetComponent(main).leftSuccessBall  % 100 ) == 0 ){
                                 suicaBall = Instantiate(suicaBall,transform.position,transform.rotation);
-                                suicaBall.transform.position = Vector3(-1350,400,0);
+                                suicaBall.transform.position = Vector3(-1350,450,0);
+                                suicaBall.transform.parent = redHundredScore.transform;
+                                showHundredScoreFlag = true;
+                                //redHundredScore.color  = new Color(255,255,255,0);
+                                showHundredScore = GameObject.Find("main").GetComponent(main).leftSuccessBall;
+                                showStartTime = Time.realtimeSinceStartup;
                             }
                             if ( transform.position.y >= boundingHeight ){
                                 GameObject.Find("ballGenerator").GetComponent(BallGenerator).leftBoxFullFlag = true;
@@ -52,7 +68,12 @@ function Update () {
                             GameObject.Find("main").GetComponent(main).rightSuccessBall++;
                             if((GameObject.Find("main").GetComponent(main).rightSuccessBall  % 100 ) == 0 ){
                                 suicaBall = Instantiate(suicaBall,transform.position,transform.rotation);
-                                suicaBall.transform.position = Vector3(1350,400,0);
+                                suicaBall.transform.position = Vector3(1350,450,0);
+                                suicaBall.transform.parent = blueHundredScore.transform;                                
+                                showHundredScoreFlag = true;
+                                showHundredScore = GameObject.Find("main").GetComponent(main).rightSuccessBall;
+                                showStartTime = Time.realtimeSinceStartup;
+                                //blueHundredScore.color  = new Color(255,255,255,0);
                             }
                             if ( transform.position.y >= boundingHeight ){
                                 GameObject.Find("ballGenerator").GetComponent(BallGenerator).rightBoxFullFlag = true;
@@ -95,7 +116,30 @@ function Update () {
 
     }
 
-}
+    }
+    if(showHundredScoreFlag){
+        if( transform.position.x < 0){
+            redHundredScore.text = showHundredScore.ToString();
+            //redHundredScore.color.a = 0;
+            //redHundredScore.transform.lossyScale += new Vector3(0.02F,0.02F,0.02F);
+            // if((Time.realtimeSinceStartup -showStartTime) < 0.6){
+            //redHundredScore.color  += new Color(0,0,0,0.1);
+            //  }
+            // if((0.6 < (Time.realtimeSinceStartup -showStartTime)) && ( (Time.realtimeSinceStartup -showStartTime)<1.2) ){
+            //     redHundredScore.color  -= new Color(255,255,255,1);
+            // }
+            if((Time.realtimeSinceStartup -showStartTime) > 1.2){
+                showHundredScoreFlag = false;
+            }
+        }
+        else{
+            blueHundredScore.text = showHundredScore.ToString();
+            if((Time.realtimeSinceStartup -showStartTime) > 1.2){
+                showHundredScoreFlag = false;
+            }
+        }
+
+    }
 }
 
 
@@ -142,48 +186,5 @@ function isInsideBox(targetVector:Vector3,whichBox:String){
         if(!isInside) break;
     }
 
-    return isInside;
-}
-
-
-
-
-/*
-    毎回rectangleLineを計算するのは効率が悪いため決め打ちにするが、一応この関数はとっておく
- */
-//指定した点と、長方形(実際に使うのはvector3のうちx,z座標のみ)内部にあるかどうかを判定
-function isInsideRectangle(targetX:int,targetZ:int,firstVertex:Vector3,secondVertex:Vector3,thirdVertex:Vector3,fourthVertex:Vector3){
-    rectangleLine = new Vector3[4];
-    pointLine = new  Vector3[4];
-
-    var targetVector:Vector3 = new Vector3(targetX,0,targetZ);
-    rectangleLine[0] =  secondVertex - firstVertex;
-    rectangleLine[1] =  thirdVertex - secondVertex;
-    rectangleLine[2]=  fourthVertex - thirdVertex;
-    rectangleLine[3] =  firstVertex - fourthVertex;
-
-    pointLine[0] =  targetVector - firstVertex;
-    pointLine[1] =  targetVector - secondVertex;
-    pointLine[2] =  targetVector - thirdVertex;
-    pointLine[3] =  targetVector - fourthVertex;
-    var baseValue = pointLine[0].x  * rectangleLine[0].z - rectangleLine[0].x * pointLine[0].z;
-    var plusFlag:boolean = true;
-    var isInside:boolean = true;
-    if(baseValue < 0) plusFlag = false;
-
-    for ( var i:int = 1 ; i < 4 ; i ++){
-        var value:int = pointLine[i].x * rectangleLine[i].z - rectangleLine[i].x * pointLine[i].z;
-        if(plusFlag){
-            if(value<0){
-                isInside = false;
-            }
-        }else{
-            if( value >0){
-                isInside = false;
-            }
-
-        }
-        if(!isInside) break;
-    }
     return isInside;
 }

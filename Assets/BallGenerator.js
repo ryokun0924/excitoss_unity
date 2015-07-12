@@ -56,7 +56,7 @@ function Update () {
     }
 
     var generateFlag :boolean =  GetComponent(OSCReceiver).oscFlag;
-    var x:int  = GetComponent(OSCReceiver).x ;
+    var x:int  = ( 640 - GetComponent(OSCReceiver).x) ;
 
     // Debug.Log("receive");
     //var test :boolean = generateFlag.oscflag;
@@ -92,6 +92,7 @@ function Update () {
         idleDisturbance(-200);
 
     }
+
 
 
 }
@@ -220,6 +221,11 @@ function makeBallSmaller(leftOrRight){
                         childTransform.localScale.z *= 0.9;
                         }
                     }
+                    for( var childTransform:Transform in GameObject.Find("redHundredScore").transform){
+                            childTransform.localScale.x *= 0.9;
+                            childTransform.localScale.y *= 0.9;
+                            childTransform.localScale.z *= 0.9;
+                        }
                     leftSmallCount++;
                 }
                 else{
@@ -235,6 +241,11 @@ function makeBallSmaller(leftOrRight){
                     childTransform.localScale.z *= 0.9;
                     }
                 }
+                for( var childTransform:Transform in GameObject.Find("blueHundredScore").transform){
+                        childTransform.localScale.x *= 0.9;
+                        childTransform.localScale.y *= 0.9;
+                        childTransform.localScale.z *= 0.9;
+                    }
                 rightSmallCount++;
         }
         else{
@@ -245,6 +256,7 @@ function makeBallSmaller(leftOrRight){
 }
 
 function convertPositionKinectToRed(kinectX:int){
+
     kinectX -= 1670;
     return kinectX;
 }
@@ -255,4 +267,15 @@ function convertPositionKinectToBlue(kinectX:int){
 function convertPositionKinectToIdle(kinectX:int){
     kinectX-=320;
     return kinectX;
+}
+function deleteBall(){
+    for( var childObject:Transform in transform ){
+            Destroy(childObject.gameObject);
+        }
+        for( var childObject:Transform in GameObject.Find("blueHundredScore").transform){
+            Destroy(childObject.gameObject);
+            }
+            for( var childObject:Transform in GameObject.Find("redHundredScore").transform){
+            Destroy(childObject.gameObject);
+                }
 }
