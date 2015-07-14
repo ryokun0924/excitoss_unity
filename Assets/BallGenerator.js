@@ -23,8 +23,8 @@ var leftBoxFullFlag:boolean = false;
 
 
 function Start (){
-    rightBoxX  =GameObject.Find("rightBox").transform.FindChild("front").transform.position.x;
-    leftBoxX  =GameObject.Find("leftBox").transform.FindChild("front").transform.position.x;
+    rightBoxX  =GameObject.Find("rightBox").transform.position.x;
+    leftBoxX  =GameObject.Find("leftBox").transform.position.x;
 
 }
 
@@ -222,20 +222,20 @@ function idleDisturbance(x:int){
 
 function makeBallSmaller(leftOrRight){
 
-
+if(!GameObject.Find("main").transform.GetComponent(main).isCountMode){
     if(leftOrRight == "left"){
             if(leftSmallCount < 5){
                 for( var childTransform:Transform in  transform){
                         if( childTransform.GetComponent(successDetect).inLeftBox == true){
-                        childTransform.localScale.x *= 0.9;
-                        childTransform.localScale.y *= 0.9;
-                        childTransform.localScale.z *= 0.9;
+                        childTransform.localScale.x *= 0.98;
+                        childTransform.localScale.y *= 0.98;
+                        childTransform.localScale.z *= 0.98;
                         }
                     }
                     for( var childTransform:Transform in GameObject.Find("redHundredScore").transform){
-                            childTransform.localScale.x *= 0.9;
-                            childTransform.localScale.y *= 0.9;
-                            childTransform.localScale.z *= 0.9;
+                            childTransform.localScale.x *= 0.98;
+                            childTransform.localScale.y *= 0.98;
+                            childTransform.localScale.z *= 0.98;
                         }
                     leftSmallCount++;
                 }
@@ -247,15 +247,15 @@ function makeBallSmaller(leftOrRight){
             if(rightSmallCount < 5){
             for( var childTransform:Transform in  transform){
                     if( childTransform.GetComponent(successDetect).inRightBox == true){
-                    childTransform.localScale.x *= 0.9;
-                    childTransform.localScale.y *= 0.9;
-                    childTransform.localScale.z *= 0.9;
+                    childTransform.localScale.x *= 0.98;
+                    childTransform.localScale.y *= 0.98;
+                    childTransform.localScale.z *= 0.98;
                     }
                 }
                 for( var childTransform:Transform in GameObject.Find("blueHundredScore").transform){
-                        childTransform.localScale.x *= 0.9;
-                        childTransform.localScale.y *= 0.9;
-                        childTransform.localScale.z *= 0.9;
+                        childTransform.localScale.x *= 0.98;
+                        childTransform.localScale.y *= 0.98;
+                        childTransform.localScale.z *= 0.98;
                     }
                 rightSmallCount++;
         }
@@ -264,6 +264,7 @@ function makeBallSmaller(leftOrRight){
             rightBoxFullFlag = false;
         }
     }
+}
 }
 
 function convertPositionKinectToRed(kinectX:int){
@@ -289,4 +290,79 @@ function deleteBall(){
             for( var childObject:Transform in GameObject.Find("redHundredScore").transform){
             Destroy(childObject.gameObject);
                 }
+}
+
+//スコア表示用ボール生成
+function createBallAtLast(whichBox:String){
+
+    var newBall = Instantiate(ball,transform.position,transform.rotation);
+    newBall.transform.parent = transform;
+    newBall.velocity = new Vector3(0,0,0);
+    if( whichBox == "right" ){
+        newBall.transform.position = new Vector3(1350 + Random.Range(-20,20) ,340 + Random.Range(0,20),Random.Range(-20,20));
+    }else if( whichBox == "left" ){
+        newBall.transform.position = new Vector3(-1350 + Random.Range(-20,20) ,340+Random.Range(0,20),Random.Range(-20,20));
+    }
+
+    var color:int;
+    var rand:int = Random.Range(0,20);
+    if ( whichBox == "right" ){
+        //青組用の色
+        if(rand == 0){
+            color = 0;
+        }else if(rand == 1){
+            color = 1;
+        }else if(rand  == 2 ){
+            color = 2;
+        }else if( rand <= 8){
+            color = 3;
+        }else if( rand <= 18){
+            color = 4;
+        }else{
+            color = 5;
+        }
+
+
+    }else {
+        //赤組用の色
+       if(rand < 11){
+            color = 0;
+        }else if(rand < 16){
+            color = 1;
+        }else if(rand  == 16 ){
+            color = 2;
+        }else if( rand == 17){
+            color = 3;
+        }else if( rand == 18){
+            color = 4;
+        }else{
+            color = 5;
+        }
+
+
+    }
+
+
+
+    switch(color){
+        case 0:
+             newBall.GetComponent(Renderer).material.color = new Color(255/255f,39/255f,28/255f,1f);
+            break;
+        case 1:
+            newBall.GetComponent(Renderer).material.color = new Color(250/255f,193/255f,42/255f,1f);
+            break;
+        case 2:
+            newBall.GetComponent(Renderer).material.color = new Color(192/255f,243/255f,0/255f,1f);
+            break;
+        case 3:
+            newBall.GetComponent(Renderer).material.color = new Color(90/255f,152/255f,255/255f,1f);
+            break;
+        case 4:
+            newBall.GetComponent(Renderer).material.color = new Color(19/255f,48/255f,135/255f,1f);
+            break;
+        case 5:
+            newBall.GetComponent(Renderer).material.color = new Color(204/255f,2/255f,255/255f,1f);
+            break;
+    }
+
 }

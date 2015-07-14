@@ -25,6 +25,7 @@ var showStartTime:float;
 var showHundredScoreFlag:boolean = false;
 var showHundredScore:int;
 
+var startHundredScoreFlag:boolean = false;
 
 function Start(){
     redHundredScore = GameObject.Find("redHundredScore").GetComponent(GUIText);
@@ -32,7 +33,7 @@ function Start(){
     blueHundredScore = GameObject.Find("blueHundredScore").GetComponent(GUIText);
     blueHundredScore.color=Color.white;
 
-    boundingHeight =  GameObject.Find("leftBox").transform.FindChild("front").transform.lossyScale.y ;
+    boundingHeight =  GameObject.Find("leftBox").transform.FindChild("visibleBox/front").transform.lossyScale.y ;
     rectangleLine  = new Vector3[4];
     pointLine = new  Vector3[4];
 }
@@ -52,6 +53,8 @@ function Update () {
                                 suicaBall.transform.position = Vector3(-1350,450,0);
                                 suicaBall.transform.parent = redHundredScore.transform;
                                 showHundredScoreFlag = true;
+                                redHundredScore.material.color.a = 1;
+                                redHundredScore.fontSize = 100;
                                 //redHundredScore.color  = new Color(255,255,255,0);
                                 showHundredScore = GameObject.Find("main").GetComponent(main).leftSuccessBall;
                                 showStartTime = Time.realtimeSinceStartup;
@@ -69,8 +72,10 @@ function Update () {
                             if((GameObject.Find("main").GetComponent(main).rightSuccessBall  % 100 ) == 0 ){
                                 suicaBall = Instantiate(suicaBall,transform.position,transform.rotation);
                                 suicaBall.transform.position = Vector3(1350,450,0);
-                                suicaBall.transform.parent = blueHundredScore.transform;                                
+                                suicaBall.transform.parent = blueHundredScore.transform;
                                 showHundredScoreFlag = true;
+                                blueHundredScore.material.color.a = 1;
+                                blueHundredScore.fontSize = 100;
                                 showHundredScore = GameObject.Find("main").GetComponent(main).rightSuccessBall;
                                 showStartTime = Time.realtimeSinceStartup;
                                 //blueHundredScore.color  = new Color(255,255,255,0);
@@ -85,7 +90,7 @@ function Update () {
         }
     }
     //一定範囲から出たら削除
-    if(transform.position.y < -200 ){
+    if(transform.position.y < -400 ){
         Destroy(this.gameObject);
     }
     else if( transform.position.z > 500){
@@ -120,26 +125,42 @@ function Update () {
     if(showHundredScoreFlag){
         if( transform.position.x < 0){
             redHundredScore.text = showHundredScore.ToString();
-            //redHundredScore.color.a = 0;
-            //redHundredScore.transform.lossyScale += new Vector3(0.02F,0.02F,0.02F);
+
+            // redHundredScore.GetComponent(Renderer).material.color.a = 0;
+            // redHundredScore.transform.localScale += new Vector3(0.02F,0.02F,0.02F);
             // if((Time.realtimeSinceStartup -showStartTime) < 0.6){
-            //redHundredScore.color  += new Color(0,0,0,0.1);
+            // redHundredScore.GetComponent(Renderer).material.color  += new Color(0,0,0,0.1);
             //  }
             // if((0.6 < (Time.realtimeSinceStartup -showStartTime)) && ( (Time.realtimeSinceStartup -showStartTime)<1.2) ){
-            //     redHundredScore.color  -= new Color(255,255,255,1);
+            //     redHundredScore.GetComponent(Renderer).material.color  -= new Color(255,255,255,1);
             // }
+
+
+                if((0.1 < (Time.realtimeSinceStartup -showStartTime)) && ( (Time.realtimeSinceStartup -showStartTime)<1.1) ){
+                        redHundredScore.material.color.a  -= 1.0 * Time.deltaTime;
+                        redHundredScore.fontSize +=  200 * Time.deltaTime;
+                }
+
+
+
             if((Time.realtimeSinceStartup -showStartTime) > 1.2){
                 showHundredScoreFlag = false;
             }
         }
         else{
             blueHundredScore.text = showHundredScore.ToString();
+            if((0.1 < (Time.realtimeSinceStartup -showStartTime)) && ( (Time.realtimeSinceStartup -showStartTime)<1.1) ){
+                    blueHundredScore.material.color.a  -= 1.0 * Time.deltaTime;
+                    blueHundredScore.fontSize += 200 * Time.deltaTime;
+            }
+
             if((Time.realtimeSinceStartup -showStartTime) > 1.2){
                 showHundredScoreFlag = false;
             }
         }
 
     }
+
 }
 
 
@@ -148,23 +169,23 @@ function Update () {
 function isInsideBox(targetVector:Vector3,whichBox:String){
 
     if(whichBox == "left"){
-        pointLine[0] =  targetVector- GameObject.Find("leftFirstVertex").transform.position;
-        pointLine[1] =  targetVector - GameObject.Find("leftSecondVertex").transform.position;
-        pointLine[2] =  targetVector- GameObject.Find("leftThirdVertex").transform.position;
-        pointLine[3] =  targetVector - GameObject.Find("leftFourthVertex").transform.position;
-        rectangleLine[0] = GameObject.Find("leftSecondVertex").transform.position - GameObject.Find("leftFirstVertex").transform.position;
-        rectangleLine[1] = GameObject.Find("leftThirdVertex").transform.position - GameObject.Find("leftSecondVertex").transform.position;
-        rectangleLine[2] = GameObject.Find("leftFourthVertex").transform.position - GameObject.Find("leftThirdVertex").transform.position;
-        rectangleLine[3] = GameObject.Find("leftFirstVertex").transform.position - GameObject.Find("leftFourthVertex").transform.position;
+        pointLine[0] =  targetVector- GameObject.Find("leftBox").transform.FindChild("detectInBox/firstVertex").transform.position;
+        pointLine[1] =  targetVector -  GameObject.Find("leftBox").transform.FindChild("detectInBox/secondVertex").transform.position;
+        pointLine[2] =  targetVector- GameObject.Find("leftBox").transform.FindChild("detectInBox/thirdVertex").transform.position;
+        pointLine[3] =  targetVector -  GameObject.Find("leftBox").transform.FindChild("detectInBox/fourthVertex").transform.position;
+        rectangleLine[0] = GameObject.Find("leftBox").transform.FindChild("detectInBox/secondVertex").transform.position -  GameObject.Find("leftBox").transform.FindChild("detectInBox/firstVertex").transform.position;
+        rectangleLine[1] = GameObject.Find("leftBox").transform.FindChild("detectInBox/thirdVertex").transform.position - GameObject.Find("leftBox").transform.FindChild("detectInBox/secondVertex").transform.position;
+        rectangleLine[2] = GameObject.Find("leftBox").transform.FindChild("detectInBox/fourthVertex").transform.position - GameObject.Find("leftBox").transform.FindChild("detectInBox/thirdVertex").transform.position;
+        rectangleLine[3] = GameObject.Find("leftBox").transform.FindChild("detectInBox/firstVertex").transform.position - GameObject.Find("leftBox").transform.FindChild("detectInBox/fourthVertex").transform.position;
     }else if( whichBox == "right"){
-        pointLine[0] =  targetVector - GameObject.Find("rightFirstVertex").transform.position;
-        pointLine[1] =  targetVector - GameObject.Find("rightSecondVertex").transform.position;
-        pointLine[2] =  targetVector - GameObject.Find("rightThirdVertex").transform.position;
-        pointLine[3] =  targetVector - GameObject.Find("rightFourthVertex").transform.position;
-        rectangleLine[0] = GameObject.Find("rightSecondVertex").transform.position - GameObject.Find("rightFirstVertex").transform.position;
-        rectangleLine[1] = GameObject.Find("rightThirdVertex").transform.position - GameObject.Find("rightSecondVertex").transform.position;
-        rectangleLine[2] = GameObject.Find("rightFourthVertex").transform.position - GameObject.Find("rightThirdVertex").transform.position;
-        rectangleLine[3] = GameObject.Find("rightFirstVertex").transform.position - GameObject.Find("rightFourthVertex").transform.position;
+        pointLine[0] =  targetVector - GameObject.Find("rightBox").transform.FindChild("detectInBox/firstVertex").transform.position;
+        pointLine[1] =  targetVector - GameObject.Find("rightBox").transform.FindChild("detectInBox/secondVertex").transform.position;
+        pointLine[2] =  targetVector - GameObject.Find("rightBox").transform.FindChild("detectInBox/thirdVertex").transform.position;
+        pointLine[3] =  targetVector - GameObject.Find("rightBox").transform.FindChild("detectInBox/fourthVertex").transform.position;
+        rectangleLine[0] = GameObject.Find("rightBox").transform.FindChild("detectInBox/secondVertex").transform.position - GameObject.Find("rightBox").transform.FindChild("detectInBox/firstVertex").transform.position;
+        rectangleLine[1] = GameObject.Find("rightBox").transform.FindChild("detectInBox/thirdVertex").transform.position - GameObject.Find("rightBox").transform.FindChild("detectInBox/secondVertex").transform.position;
+        rectangleLine[2] = GameObject.Find("rightBox").transform.FindChild("detectInBox/fourthVertex").transform.position - GameObject.Find("rightBox").transform.FindChild("detectInBox/thirdVertex").transform.position;
+        rectangleLine[3] = GameObject.Find("rightBox").transform.FindChild("detectInBox/firstVertex").transform.position - GameObject.Find("rightBox").transform.FindChild("detectInBox/fourthVertex").transform.position;
     }
     var baseValue = pointLine[0].x  * rectangleLine[0].z - rectangleLine[0].x * pointLine[0].z;
     var plusFlag:boolean = true;

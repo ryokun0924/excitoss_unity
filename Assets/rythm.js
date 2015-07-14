@@ -3,13 +3,11 @@ import System.IO;
 
 var startTime : float;
 var defaltScale : float;
-var count:int;
-var flag:boolean;
 
 var leftBoxRythmStartTime:float;
 var leftBoxRythmStartFlag:boolean = false;
 var leftBoxNowPastTime:float;
-var leftBoxRythmFinishFlag:boolean = false;
+var leftBoxRythmFinishFlag:boolean = true;
 var leftBoxRythmNumber:int = 44;
 var nowLeftRythmNumber:int = 0;
 
@@ -28,7 +26,11 @@ var bothBoxRythmNumber:int = 37;
 var nowBothRythmNumber:int = 0;
 
 var defalutScale:Vector3;
-
+var scaleSizeX:float;
+var scaleSizeY:float;
+//この値が小さいほど大きく箱が変形する
+var scaleRateX:float;
+var scaleRateY:float;
 
 var leftRythm :float[];
 var rightRythm:float[];
@@ -42,13 +44,17 @@ var nowLeftBarRythmNumber:int = 0;
 var nowRightBarRythmNumber:int = 0;
 var nowBothBarRythmNumber:int = 0;
 var backMusic:AudioSource;
-function Start () {
+var time:float;
 
+
+
+function Start () {
+    scaleRateX = 97;
+    scaleRateY = 97;
     //経過時間取得用
     //startTime = GameObject.Find("main").GetComponent(main).startTime;//Time.realtimeSinceStartup;
     backMusic = GameObject.Find("Audio Source").GetComponent(AudioSource);
-    count = 0;
-    flag = false;
+
     defalutScale = GameObject.Find("leftBox").transform.localScale;
 
 
@@ -57,20 +63,21 @@ function Start () {
     var sr:StreamReader = new StreamReader(fi.OpenRead());
     leftRythm = new Array(leftBoxRythmNumber);
     for ( var i:int = 0 ; i < leftBoxRythmNumber ; i ++){
-        leftRythm[i] = parseFloat(sr.ReadLine())-0.3;
+        leftRythm[i] = parseFloat(sr.ReadLine());
     }
     fi = new FileInfo(Application.dataPath + "/" + "blueRythm.txt");
     sr= new StreamReader(fi.OpenRead());
+
     rightRythm = new Array(rightBoxRythmNumber);
-    for ( i = 0 ; i < rightBoxRythmNumber ; i ++){
-        rightRythm[i] = parseFloat(sr.ReadLine())-0.3;
+            for ( i = 0 ; i < rightBoxRythmNumber ; i ++){
+        rightRythm[i] = parseFloat(sr.ReadLine());
     }
     fi = new FileInfo(Application.dataPath + "/" + "bothRythm.txt");
     sr= new StreamReader(fi.OpenRead());
     bothRythm = new Array(bothBoxRythmNumber);
     for ( i = 0 ; i < bothBoxRythmNumber ; i ++){
 //        Debug.Log(sr.ReadLine());
-        bothRythm[i] = parseFloat(sr.ReadLine())-0.3;
+        bothRythm[i] = parseFloat(sr.ReadLine());
     }
 
 }
@@ -78,67 +85,70 @@ function Start () {
 
 function Update () {
 
-    var time:float = backMusic.time;//Time.realtimeSinceStartup - startTime;
-    if( leftRythm[nowLeftRythmNumber] < time ){
-
+    time = backMusic.time;//Time.realtimeSinceStartup - startTime;
+    if( leftRythm[nowLeftRythmNumber] < ( time) ){
+        if(leftBoxRythmFinishFlag ){
+        nowLeftRythmNumber++;
+        leftBoxRythmStartFlag = true;
+        leftBoxRythmFinishFlag = false;
+        }
+    }
         if(!leftBoxRythmFinishFlag){
-            if(!leftBoxRythmStartFlag){
+            if(leftBoxRythmStartFlag){
+            defalutScale = GameObject.Find("leftBox").transform.localScale;
             leftBoxRythmStartTime = Time.realtimeSinceStartup;
-            leftBoxRythmStartFlag   = true;
-
+            scaleSizeX = GameObject.Find("leftBox").transform.localScale.x /scaleRateX;
+            scaleSizeY = GameObject.Find("leftBox").transform.localScale.y /scaleRateY;
+            leftBoxRythmStartFlag = false;
             }
 
             leftBoxNowPastTime = Time.realtimeSinceStartup - leftBoxRythmStartTime;
-            if(leftBoxNowPastTime < 0.2){
+            if(leftBoxNowPastTime < 0.1){
 
-            GameObject.Find("leftBox").transform.localScale += new Vector3(0.12F, 0.12F, 0);
-            count ++ ;
+            GameObject.Find("leftBox").transform.localScale += new Vector3(scaleSizeX, scaleSizeY, 0);
             }
 
             else{
-                GameObject.Find("leftBox").transform.localScale -= new Vector3(0.12F, 0.12F, 0);
-                 count ++;
-                    if( leftBoxNowPastTime >= 0.4 ){
+                GameObject.Find("leftBox").transform.localScale -= new Vector3(scaleSizeX,scaleSizeY, 0);
+                    if( leftBoxNowPastTime >= 0.2 ){
                         GameObject.Find("leftBox").transform.localScale = defalutScale;
-                        leftBoxRythmStartFlag = false;
                         leftBoxRythmFinishFlag = true;
-                        nowLeftRythmNumber++;
+
                     }
                 }
             }
-        }else{
-            leftBoxRythmFinishFlag = false;
+
+        if(rightRythm[nowRightRythmNumber] < time){
+            if(rightBoxRythmFinishFlag ){
+            nowRightRythmNumber++;
+            rightBoxRythmStartFlag = true;
+            rightBoxRythmFinishFlag = false;
+            }
         }
-        if(rightRythm[nowRightRythmNumber] < time ){
 
             if(!rightBoxRythmFinishFlag){
-                if(!rightBoxRythmStartFlag){
+                if(rightBoxRythmStartFlag){
+                defalutScale = GameObject.Find("rightBox").transform.localScale;
                 rightBoxRythmStartTime = Time.realtimeSinceStartup;
-                rightBoxRythmStartFlag   = true;
-
+                rightBoxRythmStartFlag   = false;
+                  scaleSizeX = GameObject.Find("rightBox").transform.localScale.x /scaleRateX;
+                  scaleSizeY = GameObject.Find("rightBox").transform.localScale.y /scaleRateY;
                 }
 
                 rightBoxNowPastTime = Time.realtimeSinceStartup - rightBoxRythmStartTime;
-                if(rightBoxNowPastTime < 0.2){
+                if(rightBoxNowPastTime < 0.1){
 
-                GameObject.Find("rightBox").transform.localScale += new Vector3(0.12F, 0.12F, 0);
-                count ++ ;
+                GameObject.Find("rightBox").transform.localScale += new Vector3(scaleSizeX,scaleSizeY,0);
                 }
 
                 else{
-                    GameObject.Find("rightBox").transform.localScale -= new Vector3(0.12F, 0.12F, 0);
-                     count ++;
-                        if( rightBoxNowPastTime >= 0.4 ){
+                    GameObject.Find("rightBox").transform.localScale -= new Vector3(scaleSizeX,scaleSizeY,0);
+                        if( rightBoxNowPastTime >= 0.2 ){
                             GameObject.Find("rightBox").transform.localScale = defalutScale;
-                            rightBoxRythmStartFlag = false;
                             rightBoxRythmFinishFlag = true;
-                            nowRightRythmNumber++;
                         }
                     }
                 }
-            }else{
-                rightBoxRythmFinishFlag = false;
-            }
 
 
             //両方同時の時
@@ -148,26 +158,27 @@ function Update () {
                     if(!bothBoxRythmStartFlag){
                     bothBoxRythmStartTime = Time.realtimeSinceStartup;
                     bothBoxRythmStartFlag   = true;
-
+                    scaleSizeX = GameObject.Find("rightBox").transform.localScale.x /scaleRateX;
+                    scaleSizeY = GameObject.Find("rightBox").transform.localScale.y /scaleRateY;
+                    defalutScale = GameObject.Find("leftBox").transform.localScale;
                     }
 
                     bothBoxNowPastTime = Time.realtimeSinceStartup - bothBoxRythmStartTime;
-                    if(bothBoxNowPastTime < 0.2){
+                    if(bothBoxNowPastTime < 0.1){
 
-                    GameObject.Find("rightBox").transform.localScale += new Vector3(0.12F, 0.12F, 0);
-                    GameObject.Find("leftBox").transform.localScale += new Vector3(0.12F, 0.12F, 0);
-                    count ++ ;
+                    GameObject.Find("rightBox").transform.localScale += new Vector3(scaleSizeX, scaleSizeY, 0);
+                    GameObject.Find("leftBox").transform.localScale += new Vector3(scaleSizeX, scaleSizeY, 0);
                     }
 
                     else{
-                        GameObject.Find("rightBox").transform.localScale -= new Vector3(0.12F, 0.12F, 0);
-                        GameObject.Find("leftBox").transform.localScale -= new Vector3(0.12F, 0.12F, 0);
-                         count ++;
-                            if( bothBoxNowPastTime >= 0.4 ){
+                        GameObject.Find("rightBox").transform.localScale -= new Vector3(scaleSizeX, scaleSizeY, 0);
+                        GameObject.Find("leftBox").transform.localScale -= new Vector3(scaleSizeX, scaleSizeY, 0);
+                            if( bothBoxNowPastTime >= 0.2 ){
                                 GameObject.Find("rightBox").transform.localScale = defalutScale;
                                 bothBoxRythmStartFlag = false;
                                 bothBoxRythmFinishFlag = true;
                                 nowBothRythmNumber++;
+
                             }
                         }
                     }
@@ -177,22 +188,22 @@ function Update () {
 
         //リズムバー制御
         if(Input.GetKeyDown("b")){
-            Instantiate(blueRythmBar,new Vector3(0,-0.0125,0),transform.rotation);
+            Instantiate(blueRythmBar,new Vector3(0,-0.007,0),transform.rotation);
         }
         if(Input.GetKeyDown("v")){
-            Instantiate(redRythmBar,new Vector3(0,-0.0125,0),transform.rotation);
+            Instantiate(redRythmBar,new Vector3(0,-0.007,0),transform.rotation);
         }
         if(( leftRythm[nowLeftBarRythmNumber] - 1.5)<= time){
-            Instantiate(redRythmBar,new Vector3(0,-0.0125,0),transform.rotation);
+            Instantiate(redRythmBar,new Vector3(0,-0.007,0),transform.rotation);
             nowLeftBarRythmNumber++;
         }
-        if(( rightRythm[nowRightBarRythmNumber] - 1.5)<= time){
-            Instantiate(blueRythmBar,new Vector3(0,-0.0125,0),transform.rotation);
+        if(( rightRythm[nowRightBarRythmNumber] - 1.5 )<= time){
+            Instantiate(blueRythmBar,new Vector3(0,-0.007,0),transform.rotation);
             nowRightBarRythmNumber++;
         }
         if(( bothRythm[nowBothBarRythmNumber] - 1.5)<= time){
-            Instantiate(blueRythmBar,new Vector3(0,-0.0125,0),transform.rotation);
-            Instantiate(redRythmBar,new Vector3(0,-0.0125,0),transform.rotation);
+            Instantiate(blueRythmBar,new Vector3(0,-0.007,0),transform.rotation);
+            Instantiate(redRythmBar,new Vector3(0,-0.007,0),transform.rotation);
             nowBothBarRythmNumber++;
         }
 

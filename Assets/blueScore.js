@@ -17,7 +17,7 @@ function Update () {
 }else{
     score.text ="";
 }
-if(Input.GetKey("s")){
+if(Input.GetKey("1")){
     showFlag = !showFlag;
 }
 }
