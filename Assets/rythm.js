@@ -8,21 +8,21 @@ var leftBoxRythmStartTime:float;
 var leftBoxRythmStartFlag:boolean = false;
 var leftBoxNowPastTime:float;
 var leftBoxRythmFinishFlag:boolean = true;
-var leftBoxRythmNumber:int = 44;
+var leftBoxRythmNumber:int = 45;
 var nowLeftRythmNumber:int = 0;
 
 var rightBoxRythmStartTime:float;
 var rightBoxRythmStartFlag:boolean = false;
 var rightBoxNowPastTime:float;
 var rightBoxRythmFinishFlag:boolean = false;
-var rightBoxRythmNumber:int = 44;
+var rightBoxRythmNumber:int = 45;
 var nowRightRythmNumber:int = 0;
 
 var bothBoxRythmStartTime:float;
 var bothBoxRythmStartFlag:boolean = false;
 var bothBoxNowPastTime:float;
 var bothBoxRythmFinishFlag:boolean = false;
-var bothBoxRythmNumber:int = 37;
+var bothBoxRythmNumber:int = 38;
 var nowBothRythmNumber:int = 0;
 
 var defalutScale:Vector3;
@@ -86,6 +86,7 @@ function Start () {
 function Update () {
 
     time = backMusic.time;//Time.realtimeSinceStartup - startTime;
+if(nowLeftRythmNumber < leftBoxRythmNumber){
     if( leftRythm[nowLeftRythmNumber] < ( time) ){
         if(leftBoxRythmFinishFlag ){
         nowLeftRythmNumber++;
@@ -118,6 +119,11 @@ function Update () {
                 }
             }
 
+}
+else{
+    //Debug.Log("leftOutOfRange");
+}
+if(nowRightRythmNumber < rightBoxRythmNumber){
         if(rightRythm[nowRightRythmNumber] < time){
             if(rightBoxRythmFinishFlag ){
             nowRightRythmNumber++;
@@ -150,7 +156,11 @@ function Update () {
                     }
                 }
 
-
+}
+else{
+    //Debug.Log("rightOutOfRange");
+}
+if(nowBothRythmNumber < bothBoxRythmNumber ){
             //両方同時の時
             if(bothRythm[nowBothRythmNumber] < time ){
 
@@ -185,26 +195,36 @@ function Update () {
                 }else{
                     bothBoxRythmFinishFlag = false;
                 }
+            }else{
+            //    Debug.Log("bothOutOfRange");
+            }
+
 
         //リズムバー制御
-        if(Input.GetKeyDown("b")){
-            Instantiate(blueRythmBar,new Vector3(0,-0.007,0),transform.rotation);
-        }
-        if(Input.GetKeyDown("v")){
-            Instantiate(redRythmBar,new Vector3(0,-0.007,0),transform.rotation);
-        }
-        if(( leftRythm[nowLeftBarRythmNumber] - 1.5)<= time){
-            Instantiate(redRythmBar,new Vector3(0,-0.007,0),transform.rotation);
-            nowLeftBarRythmNumber++;
-        }
+        if(nowLeftBarRythmNumber < leftBoxRythmNumber){
+
+            if(( leftRythm[nowLeftBarRythmNumber] - 1.5)<= time){
+                Instantiate(redRythmBar,new Vector3(0,-0.007,0),transform.rotation);
+                nowLeftBarRythmNumber++;
+            }
+    }else{
+        // Debug.Log("leftBarOutOfRange");
+    }
+    if(nowRightBarRythmNumber < rightBoxRythmNumber){
         if(( rightRythm[nowRightBarRythmNumber] - 1.5 )<= time){
             Instantiate(blueRythmBar,new Vector3(0,-0.007,0),transform.rotation);
             nowRightBarRythmNumber++;
         }
+    }else{
+    //    Debug.Log("leftBarOutOfRange");
+    }
+    if(nowBothBarRythmNumber < bothBoxRythmNumber){
         if(( bothRythm[nowBothBarRythmNumber] - 1.5)<= time){
             Instantiate(blueRythmBar,new Vector3(0,-0.007,0),transform.rotation);
             Instantiate(redRythmBar,new Vector3(0,-0.007,0),transform.rotation);
             nowBothBarRythmNumber++;
         }
+    }else{//Debug.Log("bothBarOutOfRange");
+}
 
 }

@@ -15,6 +15,7 @@ var nowTime:float;
 var openingTexture:Texture;
 var vjdummyTexture:Texture;
 var whiteTexture:Texture;
+var blackTexture:Texture;
 
 var startFlag:boolean = false;
 
@@ -90,7 +91,7 @@ function OnGUI(){
 	else if(movieNumber==3) {GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), movieTexture3); movieTexture3.Play();}
 	else if(movieNumber==4){GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), movieTexture4); movieTexture4.Play();}
 	else if(movieNumber==0){ }//taiki
-	else {
+	else if(movieNumber == 5){
 		GUI.backgroundColor = Color.black;
 		GUI.DrawTexture(new Rect((Screen.width-284)/2, 20, 284, 66), SyuukeiText);
 		GUI.DrawTexture(new Rect((Screen.width-510)/2, 100, 510, 48), SyuukeiRed);
@@ -98,21 +99,31 @@ function OnGUI(){
 		GUI.DrawTexture(new Rect((Screen.width-510)/2, 220, 510, 48), SyuukeiBlue);
 		GUI.DrawTexture(new Rect((Screen.width-510)/2, 290, 510, 60), SyuukeiBoth);
 	}//saiten
-}
-if(((nowTime>93)&&(nowTime<115)) || ((nowTime>168)&&(nowTime<182))){
-    	GUI.color.a =1;
+    else if(movieNumber == 6){
+            GUI.color.a = 0.3;
+        if(leftSuccessBall > rightSuccessBall){
+            GUI.DrawTexture(new Rect(Screen.width/2, 0, Screen.width, Screen.height), blackTexture);
+        }else if(leftSuccessBall < rightSuccessBall){
+            GUI.DrawTexture(new Rect(0, 0, Screen.width/2, Screen.height), blackTexture);
+        }
+    }
+    //VJのダミー
+    else if(movieNumber == 7){
+        GUI.color.a =1;
         GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), vjdummyTexture);
+    }
 }
 if((nowTime>234)&&(nowTime<235)){
     GUI.color.a =0;
 }
-if((nowTime>235)&&(nowTime<240)){
-    GUI.color.a += 0.01;
+if((nowTime>235)&&(nowTime<244)){
+    GUI.color.a = alpha;
     GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), whiteTexture);
 }
 }
 
 function Update () {
+
 //時間経過に伴う変更はひとまずここに書く
 	if(Input.GetKey("s")){
 
@@ -124,16 +135,43 @@ function Update () {
 
 
     nowTime = GameObject.Find("Audio Source").GetComponent(AudioSource).time;
-    fadeOut(31);
+
+    //GUI表示
+    //opening
+    if(nowTime < 40 ){
+        fadeOut(31);
+    }
+    //ラウンド結果表示
+    else if( ( 88 < nowTime ) && (nowTime <=93)){
+        movieNumber = 6;
+    }
+    else if((nowTime>93)&&(nowTime<115)){
+         movieNumber = 7;
+    }
+    else if((163<nowTime) && (nowTime<=168)){
+        movieNumber = 6;
+    }
+    else if((nowTime>168)&&(nowTime<179)){
+               movieNumber = 7;
+    }else{
+        movieNumber = 0;
+    }
+    //GUIに関する値変更
+    if((nowTime>235)&&(nowTime<244)){
+        alpha+= 0.005;
+    }
+
 
     //スコア表示
-    if( ( 87 < nowTime ) && (nowTime <=92) ){
+    if( ( 88 < nowTime ) && (nowTime <=93) ){
         GameObject.Find("redScore").GetComponent(redScore).showFlag = true;
         GameObject.Find("blueScore").GetComponent(blueScore).showFlag = true;
+
     }
-    else if((160<nowTime) && (nowTime<=165)){
+    else if((163<nowTime) && (nowTime<=168)){
         GameObject.Find("redScore").GetComponent(redScore).showFlag = true;
         GameObject.Find("blueScore").GetComponent(blueScore).showFlag = true;
+
     }
     else{
         GameObject.Find("redScore").GetComponent(redScore).showFlag = false;
@@ -142,25 +180,29 @@ function Update () {
 
 
     //カゴの動き
-    if((27 < nowTime ) && (nowTime<=37)){
+    if((25 < nowTime ) && (nowTime<=35)){
         GameObject.Find("leftBox").transform.position += new Vector3(0,5*Time.deltaTime,50*Time.deltaTime);
         GameObject.Find("rightBox").transform.position += new Vector3(0,5*Time.deltaTime,50*Time.deltaTime);
     }
-    if((37<=nowTime)&&(nowTime<39)){
+    if((35<=nowTime)&&(nowTime<37)){
         GameObject.Find("leftBox").transform.position = new Vector3(-1350,0,0);
         GameObject.Find("rightBox").transform.position = new Vector3(1350,0,0);
     }
-    if( (32<= nowTime) && (nowTime < 34) ){
+    if( (34<= nowTime) && (nowTime < 36) ){
         GameObject.Find("blueFloor").transform.position.y += 400 * Time.deltaTime;
         GameObject.Find("redFloor").transform.position.y += 400 * Time.deltaTime;
     }
-    if( (34 <= nowTime) && (nowTime < 35) ){
+    if( (36 <= nowTime) && (nowTime < 37) ){
         GameObject.Find("blueFloor").transform.position.y = (-200);
         GameObject.Find("redFloor").transform.position.y= (-200);
     }
 
 
     //かごのサイズ
+        if((0<=nowTime)&&(nowTime<2)){
+    GameObject.Find("leftBox").transform.localScale = new Vector3(12,16,12);
+    GameObject.Find("rightBox").transform.localScale = new Vector3(12,16,12);
+}
     if((48.2<=nowTime)&&(nowTime<48.3)){
         GameObject.Find("leftBox").transform.localScale += new Vector3(1.5/0.1*Time.deltaTime,2/0.1*Time.deltaTime,1.5/0.1*Time.deltaTime);
         GameObject.Find("rightBox").transform.localScale += new Vector3(1.5/0.1*Time.deltaTime,2/0.1*Time.deltaTime,1.5/0.1*Time.deltaTime);
@@ -185,7 +227,7 @@ function Update () {
     }
 
 
-     //ボールカウント
+     //ボールカウントをラウンドごとにリセット
      if((114<nowTime) && ( secondRoundFlag == false)){
          secondRoundFlag = true;
          redBallCount[0] = leftSuccessBall;
@@ -194,7 +236,7 @@ function Update () {
          rightSuccessBall = 0;
          GameObject.Find("ballGenerator").GetComponent(BallGenerator).deleteBall();
      }
-     else if((181<nowTime) && ( finalRoundFlag == false)){
+     else if((178<nowTime) && ( finalRoundFlag == false)){
          leftSuccessBall = 0;
          rightSuccessBall = 0;
          finalRoundFlag = true;
@@ -218,26 +260,33 @@ function Update () {
          message.text ="FIGHT!!";
      }
 
-     else if((178<nowTime) && (nowTime <=182)){
-         var intTime:int = nowTime;
+     else if((179<nowTime) && (nowTime <=181)){
+         message.fontSize = 200;
+         var intTime:int = (nowTime - 179)*2;
+         //フラッシュさせる
         if((intTime%2) == 0){
          message.text = "FINAL ROUND";
+         }else{
+             message.text = "";
+         }
      }
-     }
-     else if((182.3<nowTime) && (nowTime <=182.6)){
+     else if((182.6<nowTime) && (nowTime <=183)){
+          message.fontSize = 300;
          message.text ="1";
      }
-     else if((182.6<nowTime) && (nowTime <=182.9)){
+     else if((183<nowTime) && (nowTime <=183.4)){
          message.text ="2";
      }
-     else if((182.9<nowTime) && (nowTime <=183.2)){
+     else if((183.4<nowTime) && (nowTime <=183.8)){
          message.text ="3";
      }
-     else if((183.2<nowTime) && (nowTime <=184.2)){
+     else if((183.8<nowTime) && (nowTime <=184.8)){
          message.text ="FIGHT!!";
      }
      else if((230<nowTime)&&(nowTime<=231)){
-          message.text ="5";
+         message.fontSize = 400;
+         message.material.color.a = 0.7;
+         message.text ="5";
      }
      else if((231<nowTime)&&(nowTime<=232)){
           message.text ="4";
@@ -253,6 +302,91 @@ function Update () {
      }
      else{
          message.text = "";
+     }
+
+
+
+
+
+     //集計モード
+     if( ( 236 < nowTime )){
+         if(!isCountMode){
+             countStartTime = Time.realtimeSinceStartup;
+         }
+         isCountMode = true;
+     }
+
+     if(isCountMode){
+     if(GameObject.Find("leftBox").transform.position.y < 340){
+         for( var childTransform:Transform in  GameObject.Find("ballGenerator").transform){
+                   if( (childTransform.GetComponent(successDetect).inLeftBox == true)||(childTransform.GetComponent(successDetect).inRightBox == true)){
+                       childTransform.position  += new Vector3(0,velocityAtCountTime*Time.deltaTime,0);
+                 }
+             }
+         // GameObject.Find("leftBox").GetComponent(Rigidbody).velocity = new Vector3(0,velocityAtCountTime,0);
+         // GameObject.Find("rightBox").transform.position += new Vector3(0,velocityAtCountTime*Time.deltaTime,0);
+      GameObject.Find("leftBox").transform.position += new Vector3(0,velocityAtCountTime*Time.deltaTime,0);
+      GameObject.Find("rightBox").transform.position += new Vector3(0,velocityAtCountTime*Time.deltaTime,0);
+
+     }
+        if(Input.GetKeyDown("q")){
+
+        }
+
+         if(Input.GetKeyDown("w")){
+             for( var childTransform:Transform in  GameObject.Find("ballGenerator").transform){
+
+                         Destroy(childTransform.gameObject);
+
+             }
+                 GameObject.Find("leftBox").transform.FindChild("physicalBox/bottom").gameObject.active = false;
+                 GameObject.Find("leftBox").transform.FindChild("visibleBox/bottom").gameObject.active = false;
+                 GameObject.Find("rightBox").transform.FindChild("physicalBox/bottom").gameObject.active = false;
+                 GameObject.Find("rightBox").transform.FindChild("visibleBox/bottom").gameObject.active = false;
+             //     for( var childTransform:Transform in  GameObject.Find("ballGenerator").transform){
+             //             if( (childTransform.GetComponent(successDetect).inLeftBox == "true")||(childTransform.GetComponent(successDetect).inRightBox == "true")){
+             //                 childTransform.GetComponent(Rigidbody).AddForce(0,forceAtCountTime,0);
+             //             }
+             //
+             // }
+             for ( var i:int  = 0 ; i < 200 ; i ++ ){
+                 GameObject.Find("ballGenerator").transform.GetComponent(BallGenerator).createBallAtLast("left");
+                 GameObject.Find("ballGenerator").transform.GetComponent(BallGenerator).createBallAtLast("right");
+             }
+             for( var childTransform:Transform in  GameObject.Find("ballGenerator").transform){
+
+                         childTransform.GetComponent(Rigidbody).AddForce(0,forceAtCountTime,0);
+
+         }
+         }
+         if(Input.GetKeyDown("e")){
+                 for ( i  = 0 ; i < 200 ; i ++ ){
+                     GameObject.Find("ballGenerator").transform.GetComponent(BallGenerator).createBallAtLast("left");
+                     GameObject.Find("ballGenerator").transform.GetComponent(BallGenerator).createBallAtLast("right");
+                 }
+                 for( var childTransform:Transform in  GameObject.Find("ballGenerator").transform){
+
+                             childTransform.GetComponent(Rigidbody).AddForce(0,forceAtCountTime,0);
+
+             }
+         }
+         if(Input.GetKeyDown("r")){
+             for ( i = 0 ; i < 200 ; i ++ ){
+                 GameObject.Find("ballGenerator").transform.GetComponent(BallGenerator).createBallAtLast("left");
+                 GameObject.Find("ballGenerator").transform.GetComponent(BallGenerator).createBallAtLast("right");
+             }
+             for( var childTransform:Transform in  GameObject.Find("ballGenerator").transform){
+
+                         childTransform.GetComponent(Rigidbody).AddForce(0,forceAtCountTime,0);
+
+         }
+                 for( var childTransform:Transform in  GameObject.Find("ballGenerator").transform){
+
+                             childTransform.GetComponent(Rigidbody).AddForce(0,forceAtCountTime,0);
+
+             }
+         }
+
      }
 
 
@@ -289,82 +423,3 @@ function fadeOut(time:float){
     }
 
 }
-
-
-    //集計モード
-    if( ( 235 < nowTime )){
-        if(!isCountMode){
-            countStartTime = Time.realtimeSinceStartup;
-        }
-        isCountMode = true;
-    }
-
-    if(isCountMode){
-    if(GameObject.Find("leftBox").transform.position.y < 340){
-        for( var childTransform:Transform in  GameObject.Find("ballGenerator").transform){
-                  if( (childTransform.GetComponent(successDetect).inLeftBox == true)||(childTransform.GetComponent(successDetect).inRightBox == true)){
-                      childTransform.position  += new Vector3(0,velocityAtCountTime*Time.deltaTime,0);
-                }
-            }
-        // GameObject.Find("leftBox").GetComponent(Rigidbody).velocity = new Vector3(0,velocityAtCountTime,0);
-        // GameObject.Find("rightBox").transform.position += new Vector3(0,velocityAtCountTime*Time.deltaTime,0);
-     GameObject.Find("leftBox").transform.position += new Vector3(0,velocityAtCountTime*Time.deltaTime,0);
-     GameObject.Find("rightBox").transform.position += new Vector3(0,velocityAtCountTime*Time.deltaTime,0);
-
-    }
-
-        if(Input.GetKeyDown("w")){
-            for( var childTransform:Transform in  GameObject.Find("ballGenerator").transform){
-
-                        Destroy(childTransform.gameObject);
-
-            }
-                GameObject.Find("leftBox").transform.FindChild("physicalBox/bottom").gameObject.active = false;
-                GameObject.Find("leftBox").transform.FindChild("visibleBox/bottom").gameObject.active = false;
-                GameObject.Find("rightBox").transform.FindChild("physicalBox/bottom").gameObject.active = false;
-                GameObject.Find("rightBox").transform.FindChild("visibleBox/bottom").gameObject.active = false;
-            //     for( var childTransform:Transform in  GameObject.Find("ballGenerator").transform){
-            //             if( (childTransform.GetComponent(successDetect).inLeftBox == "true")||(childTransform.GetComponent(successDetect).inRightBox == "true")){
-            //                 childTransform.GetComponent(Rigidbody).AddForce(0,forceAtCountTime,0);
-            //             }
-            //
-            // }
-            for ( var i:int  = 0 ; i < 200 ; i ++ ){
-                GameObject.Find("ballGenerator").transform.GetComponent(BallGenerator).createBallAtLast("left");
-                GameObject.Find("ballGenerator").transform.GetComponent(BallGenerator).createBallAtLast("right");
-            }
-            for( var childTransform:Transform in  GameObject.Find("ballGenerator").transform){
-
-                        childTransform.GetComponent(Rigidbody).AddForce(0,forceAtCountTime,0);
-
-        }
-        }
-        if(Input.GetKeyDown("e")){
-                for ( i  = 0 ; i < 200 ; i ++ ){
-                    GameObject.Find("ballGenerator").transform.GetComponent(BallGenerator).createBallAtLast("left");
-                    GameObject.Find("ballGenerator").transform.GetComponent(BallGenerator).createBallAtLast("right");
-                }
-                for( var childTransform:Transform in  GameObject.Find("ballGenerator").transform){
-
-                            childTransform.GetComponent(Rigidbody).AddForce(0,forceAtCountTime,0);
-
-            }
-        }
-        if(Input.GetKeyDown("r")){
-            for ( i = 0 ; i < 200 ; i ++ ){
-                GameObject.Find("ballGenerator").transform.GetComponent(BallGenerator).createBallAtLast("left");
-                GameObject.Find("ballGenerator").transform.GetComponent(BallGenerator).createBallAtLast("right");
-            }
-            for( var childTransform:Transform in  GameObject.Find("ballGenerator").transform){
-
-                        childTransform.GetComponent(Rigidbody).AddForce(0,forceAtCountTime,0);
-
-        }
-                for( var childTransform:Transform in  GameObject.Find("ballGenerator").transform){
-
-                            childTransform.GetComponent(Rigidbody).AddForce(0,forceAtCountTime,0);
-
-            }
-        }
-
-    }
