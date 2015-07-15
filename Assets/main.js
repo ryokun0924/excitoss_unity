@@ -362,22 +362,6 @@ function Update () {
 
              }
          }
-         if(Input.GetKeyDown("r")){
-             for ( i = 0 ; i < 200 ; i ++ ){
-                 GameObject.Find("ballGenerator").transform.GetComponent(BallGenerator).createBallAtLast("left");
-                 GameObject.Find("ballGenerator").transform.GetComponent(BallGenerator).createBallAtLast("right");
-             }
-             for( var childTransform:Transform in  GameObject.Find("ballGenerator").transform){
-
-                         childTransform.GetComponent(Rigidbody).AddForce(0,forceAtCountTime,0);
-
-         }
-                 for( var childTransform:Transform in  GameObject.Find("ballGenerator").transform){
-
-                             childTransform.GetComponent(Rigidbody).AddForce(0,forceAtCountTime,0);
-
-             }
-         }
 
      }
 
