@@ -8,6 +8,10 @@ var SyuukeiText : Texture;
 var SyuukeiRed : Texture;
 var SyuukeiBlue : Texture;
 var SyuukeiBoth : Texture;
+var Round1Text : Texture;
+var Round2Text : Texture;
+var FinalRaoundText : Texture;
+var TotalText : Texture;
 var Kekka : Texture;
 var alpha:float = 1;
 var movieNumber:int = 0;
@@ -19,6 +23,19 @@ var blackTexture:Texture;
 
 var startFlag:boolean = false;
 
+//結果を格納
+var stage1 :GUIText;
+var stage1R :GUIText;
+var stage1B :GUIText;
+var stage2 :GUIText;
+var stage2R :GUIText;
+var stage2B :GUIText;
+var stage3 :GUIText;
+var stage3R :GUIText;
+var stage3B :GUIText;
+var total :GUIText;
+var totalR :GUIText;
+var totalB :GUIText;
 
 
 var leftSuccessBall:int = 0;
@@ -58,6 +75,8 @@ var countStartTime:int;
 
 var ballDeleteFlag:boolean = false;
 
+var showNumber:int = 0;
+
 function Start () {
     message = GameObject.Find("message").GetComponent(GUIText);
     message.color=Color.white;
@@ -76,6 +95,10 @@ function Start () {
 
     redBallCount = new Array(3);
     blueBallCount = new Array(3);
+    for ( var i:int = 0 ; i < 3 ; i ++){
+        redBallCount[i] = 0;
+blueBallCount[i] = 0;
+    }
     GameObject.Find("leftBox").transform.position = new Vector3(-1350,-50,-500);
     GameObject.Find("rightBox").transform.position = new Vector3(1350,-50,-500);
     GameObject.Find("leftBox").transform.localScale = new Vector3(12,16,12);
@@ -95,12 +118,12 @@ function OnGUI(){
 	else if(movieNumber==4){GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), movieTexture4); movieTexture4.Play();}
 	else if(movieNumber==0){ }//taiki
 	else if(movieNumber == 5){
-		GUI.backgroundColor = Color.black;
-		GUI.DrawTexture(new Rect((Screen.width-284)/2, 20, 284, 66), SyuukeiText);
-		GUI.DrawTexture(new Rect((Screen.width-510)/2, 100, 510, 48), SyuukeiRed);
-		GUI.DrawTexture(new Rect((Screen.width-510)/2, 160, 510, 48), SyuukeiRed);
-		GUI.DrawTexture(new Rect((Screen.width-510)/2, 220, 510, 48), SyuukeiBlue);
-		GUI.DrawTexture(new Rect((Screen.width-510)/2, 290, 510, 60), SyuukeiBoth);
+        //背景表示
+		if((nowTime>245)&&(nowTime<248)) GUI.DrawTexture(new Rect((Screen.width-284)/2, 20, 284, 66), SyuukeiText);
+		if((nowTime>248)&&(nowTime<249)) GUI.DrawTexture(new Rect((Screen.width-510)/2, 100, 510, 48), SyuukeiRed);
+		if((nowTime>249)&&(nowTime<250)) GUI.DrawTexture(new Rect((Screen.width-510)/2, 160, 510, 48), SyuukeiRed);
+		if((nowTime>250)&&(nowTime<251)) GUI.DrawTexture(new Rect((Screen.width-510)/2, 220, 510, 48), SyuukeiBlue);
+		if((nowTime>253)&&(nowTime<255)) GUI.DrawTexture(new Rect((Screen.width-510)/2, 290, 510, 60), SyuukeiBoth);
 	}//saiten
     else if(movieNumber == 6){
             GUI.color.a = 0.3;
@@ -123,6 +146,70 @@ if((nowTime>235)&&(nowTime<244)){
     GUI.color.a = alpha;
     GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), whiteTexture);
 }
+
+
+if(showNumber == 1){
+        GUI.DrawTexture(new Rect((Screen.width-284)/2, 20, 284, 66), SyuukeiText);
+}
+
+    if(showNumber == 2){
+        GUI.DrawTexture(new Rect((Screen.width-284)/2, 20, 284, 66), SyuukeiText);
+
+            if(redBallCount[0]>blueBallCount[0]){
+                 GUI.DrawTexture(new Rect((Screen.width-510)/2, 120, 510, 48), SyuukeiRed);
+            }else{
+                GUI.DrawTexture(new Rect((Screen.width-510)/2,  120, 510, 48), SyuukeiBlue);
+            }
+            GUI.DrawTexture(new Rect((Screen.width)/2-110.5,  120,221, 37), Round1Text);
+
+
+}
+if(showNumber==3){
+
+    GUI.DrawTexture(new Rect((Screen.width-284)/2, 20, 284, 66), SyuukeiText);
+        if(redBallCount[1]>blueBallCount[1]){
+            GUI.DrawTexture(new Rect((Screen.width-510)/2,  165, 510, 48), SyuukeiRed);
+        }else{
+            GUI.DrawTexture(new Rect((Screen.width-510)/2,  165, 510, 48), SyuukeiBlue);
+        }
+                    GUI.DrawTexture(new Rect((Screen.width)/2-110.5, 165,221, 37), Round2Text);
+
+}
+if(showNumber==4){
+
+    GUI.DrawTexture(new Rect((Screen.width-284)/2, 20, 284, 66), SyuukeiText);
+        if(redBallCount[2]>blueBallCount[2]){
+            GUI.DrawTexture(new Rect((Screen.width-510)/2, 210, 510, 48), SyuukeiRed);
+        }else{
+            GUI.DrawTexture(new Rect((Screen.width-510)/2,210, 510, 48), SyuukeiBlue);
+        }
+                    GUI.DrawTexture(new Rect((Screen.width)/2-110.5, 210,221, 37), FinalRaoundText);
+}
+if(showNumber == 5){
+   GUI.DrawTexture(new Rect((Screen.width-284)/2, 20, 284, 66), SyuukeiText);
+    var blueTotalCount:int = 0;
+    var redTotalCount:int = 0;
+    for( var j:int = 0 ; j < 3 ; j ++ ){
+        blueTotalCount +=blueBallCount[j];
+        redTotalCount += redBallCount[j];
+    }
+
+       if(redTotalCount>blueTotalCount){
+           GUI.DrawTexture(new Rect((Screen.width-510)/2, 255, 510, 48), SyuukeiRed);
+       }else{
+           GUI.DrawTexture(new Rect((Screen.width-510)/2, 255, 510, 48), SyuukeiBlue);
+       }
+            GUI.DrawTexture(new Rect((Screen.width)/2-110.5, 255,190, 30), TotalText);
+
+}
+if(showNumber == 6){
+    showNumber = 0;
+}
+
+
+
+
+
 }
 
 function Update () {
@@ -135,7 +222,9 @@ function Update () {
         movieNumber = 1;
         startFlag = true;
 	}
-
+if(Input.GetKeyDown("z")){
+    showNumber++;
+}
 
     nowTime = GameObject.Find("Audio Source").GetComponent(AudioSource).time;
 
@@ -373,10 +462,14 @@ function Update () {
 
      }
 
+ //     if((nowTime>5)&&(nowTime<18)) GUI.DrawTexture(new Rect((Screen.width-510)/2, 200, 510, 48), SyuukeiRed);
+ // if((nowTime>5.7)&&(nowTime<18)) GUI.DrawTexture(new Rect((Screen.width-510)/2, 260, 510, 48), SyuukeiRed);
+ // if((nowTime>6.4)&&(nowTime<18)) GUI.DrawTexture(new Rect((Screen.width-510)/2, 320, 510, 48), SyuukeiBlue);
+ // if((nowTime>8)&&(nowTime<18)) GUI.DrawTexture(new Rect((Screen.width-510)/2, 390, 510, 60), SyuukeiBoth);
+ // if((nowTime>18)&&(nowTime<28)) GUI.DrawTexture(new Rect((Screen.width-510)/2, 390, 510, 60), SyuukeiBoth);;
+
 
 }
-
-
 
 
 function fadeIn(mov,time:float){
