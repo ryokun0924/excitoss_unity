@@ -157,8 +157,10 @@ function Update () {
         movieNumber = 0;
     }
     //GUIに関する値変更
-    if((nowTime>235)&&(nowTime<244)){
-        alpha+= 0.005;
+    if((nowTime>235)&&(nowTime<241)){
+        alpha+= 0.007;
+    }else if((nowTime>242) && (nowTime<250)){
+        alpha-= 0.007;
     }
 
 
@@ -329,20 +331,10 @@ function Update () {
       GameObject.Find("rightBox").transform.position += new Vector3(0,velocityAtCountTime*Time.deltaTime,0);
 
      }
-        if(Input.GetKeyDown("q")){
 
-        }
 
          if(Input.GetKeyDown("w")){
-             for( var childTransform:Transform in  GameObject.Find("ballGenerator").transform){
 
-                         Destroy(childTransform.gameObject);
-
-             }
-                 GameObject.Find("leftBox").transform.FindChild("physicalBox/bottom").gameObject.active = false;
-                 GameObject.Find("leftBox").transform.FindChild("visibleBox/bottom").gameObject.active = false;
-                 GameObject.Find("rightBox").transform.FindChild("physicalBox/bottom").gameObject.active = false;
-                 GameObject.Find("rightBox").transform.FindChild("visibleBox/bottom").gameObject.active = false;
              //     for( var childTransform:Transform in  GameObject.Find("ballGenerator").transform){
              //             if( (childTransform.GetComponent(successDetect).inLeftBox == "true")||(childTransform.GetComponent(successDetect).inRightBox == "true")){
              //                 childTransform.GetComponent(Rigidbody).AddForce(0,forceAtCountTime,0);

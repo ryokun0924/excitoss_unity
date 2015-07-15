@@ -123,6 +123,7 @@ function Update () {
 
     }
     if(showHundredScoreFlag){
+        if(!GameObject.Find("main").GetComponent(main).isCountMode){
         if( transform.position.x < 0){
             redHundredScore.text = showHundredScore.ToString();
 
@@ -160,7 +161,7 @@ function Update () {
         }
 
     }
-
+}
 }
 
 
