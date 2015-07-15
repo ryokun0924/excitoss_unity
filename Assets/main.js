@@ -341,6 +341,13 @@ function Update () {
              //             }
              //
              // }
+             //ボールを消す
+              GameObject.Find("ballGenerator").GetComponent(BallGenerator).deleteBall();
+             //箱の底を抜く
+                          GameObject.Find("leftBox").transform.FindChild("physicalBox/bottom").gameObject.active = false;
+                          GameObject.Find("leftBox").transform.FindChild("visibleBox/bottom").gameObject.active = false;
+                          GameObject.Find("rightBox").transform.FindChild("physicalBox/bottom").gameObject.active = false;
+                          GameObject.Find("rightBox").transform.FindChild("visibleBox/bottom").gameObject.active = false;
              for ( var i:int  = 0 ; i < 200 ; i ++ ){
                  GameObject.Find("ballGenerator").transform.GetComponent(BallGenerator).createBallAtLast("left");
                  GameObject.Find("ballGenerator").transform.GetComponent(BallGenerator).createBallAtLast("right");
