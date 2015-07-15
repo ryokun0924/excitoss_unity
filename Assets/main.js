@@ -55,6 +55,9 @@ var finalRoundFlag:boolean = false;
 var isCountMode:boolean = false;
 
 var countStartTime:int;
+
+var ballDeleteFlag:boolean = false;
+
 function Start () {
     message = GameObject.Find("message").GetComponent(GUIText);
     message.color=Color.white;
@@ -330,6 +333,20 @@ function Update () {
       GameObject.Find("leftBox").transform.position += new Vector3(0,velocityAtCountTime*Time.deltaTime,0);
       GameObject.Find("rightBox").transform.position += new Vector3(0,velocityAtCountTime*Time.deltaTime,0);
 
+
+     }
+     //規定の位置まできたら床を抜く(一度だけ行う処理)
+     else{
+         if(!ballDeleteFlag){
+         //ボールを消す
+          GameObject.Find("ballGenerator").GetComponent(BallGenerator).deleteBall();
+         //箱の底を抜く
+                      GameObject.Find("leftBox").transform.FindChild("physicalBox/bottom").gameObject.active = false;
+                      GameObject.Find("leftBox").transform.FindChild("visibleBox/bottom").gameObject.active = false;
+                      GameObject.Find("rightBox").transform.FindChild("physicalBox/bottom").gameObject.active = false;
+                      GameObject.Find("rightBox").transform.FindChild("visibleBox/bottom").gameObject.active = false;
+                      ballDeleteFlag = true;
+                  }
      }
 
 
@@ -341,13 +358,7 @@ function Update () {
              //             }
              //
              // }
-             //ボールを消す
-              GameObject.Find("ballGenerator").GetComponent(BallGenerator).deleteBall();
-             //箱の底を抜く
-                          GameObject.Find("leftBox").transform.FindChild("physicalBox/bottom").gameObject.active = false;
-                          GameObject.Find("leftBox").transform.FindChild("visibleBox/bottom").gameObject.active = false;
-                          GameObject.Find("rightBox").transform.FindChild("physicalBox/bottom").gameObject.active = false;
-                          GameObject.Find("rightBox").transform.FindChild("visibleBox/bottom").gameObject.active = false;
+
              for ( var i:int  = 0 ; i < 200 ; i ++ ){
                  GameObject.Find("ballGenerator").transform.GetComponent(BallGenerator).createBallAtLast("left");
                  GameObject.Find("ballGenerator").transform.GetComponent(BallGenerator).createBallAtLast("right");
@@ -358,17 +369,7 @@ function Update () {
 
          }
          }
-         if(Input.GetKeyDown("e")){
-                 for ( i  = 0 ; i < 200 ; i ++ ){
-                     GameObject.Find("ballGenerator").transform.GetComponent(BallGenerator).createBallAtLast("left");
-                     GameObject.Find("ballGenerator").transform.GetComponent(BallGenerator).createBallAtLast("right");
-                 }
-                 for( var childTransform:Transform in  GameObject.Find("ballGenerator").transform){
 
-                             childTransform.GetComponent(Rigidbody).AddForce(0,forceAtCountTime,0);
-
-             }
-         }
 
      }
 
