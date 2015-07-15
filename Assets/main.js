@@ -21,6 +21,11 @@ var vjdummyTexture:Texture;
 var whiteTexture:Texture;
 var blackTexture:Texture;
 
+
+var guiStylesLeft :GUIStyle;
+var guiStylesRight :GUIStyle;
+var guiStylesTitle :GUIStyle;
+
 var startFlag:boolean = false;
 
 //結果を格納
@@ -76,6 +81,8 @@ var countStartTime:int;
 var ballDeleteFlag:boolean = false;
 
 var showNumber:int = 0;
+var blueTotalCount:int = 0;
+var redTotalCount:int = 0;
 
 function Start () {
     message = GameObject.Find("message").GetComponent(GUIText);
@@ -90,6 +97,9 @@ function Start () {
     movCamera.enabled=false;
     rightCamera.enabled = true;
     leftCamera.enabled = true;
+
+    leftCamera.pixelRect = new Rect( 240, 0, 720, 1080);
+    rightCamera.pixelRect = new Rect( 960, 0, 720, 1080);
 //    Handheld.PlayFullScreenMovie("opening.mov", Color.black, FullScreenMovieControlMode.CancelOnInput);
 
 
@@ -138,6 +148,18 @@ function OnGUI(){
         GUI.color.a =1;
         GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), vjdummyTexture);
     }
+    // GUI.Label(Rect(40, 20, 100, 50), "ROUND1", guiStylesTitle);
+    // 	GUI.Label(Rect(40, 40, 100, 50), "ROUND2", guiStylesTitle);
+    // 	GUI.Label(Rect(40, 60, 100, 50), "FINAL ROUND", guiStylesTitle);
+    // 	GUI.Label(Rect(40, 90, 100, 50), "TOTAL", guiStylesTitle);
+    // 	GUI.Label(Rect(20, 20, 100, 50), redBallCount[0].ToString(), guiStylesLeft);
+    // 	GUI.Label(Rect(20, 40, 100, 50), redBallCount[1].ToString(), guiStylesLeft);
+    // 	GUI.Label(Rect(20, 60, 100, 50), redBallCount[2].ToString(), guiStylesLeft);
+    // 	GUI.Label(Rect(20, 90, 100, 50),redTotalCount.ToString(), guiStylesLeft);
+    // 	GUI.Label(Rect(100, 20, 100, 50), blueBallCount[0].ToString(), guiStylesRight);
+    // 	GUI.Label(Rect(100, 40, 100, 50), blueBallCount[1].ToString(), guiStylesRight);
+    // 	GUI.Label(Rect(100, 60, 100, 50), blueBallCount[2].ToString(), guiStylesRight);
+    // 	GUI.Label(Rect(100, 90, 100, 50), blueTotalCount.ToString(), guiStylesRight);
 }
 if((nowTime>234)&&(nowTime<235)){
     GUI.color.a =0;
@@ -187,8 +209,7 @@ if(showNumber==4){
 }
 if(showNumber == 5){
    GUI.DrawTexture(new Rect((Screen.width-284)/2, 20, 284, 66), SyuukeiText);
-    var blueTotalCount:int = 0;
-    var redTotalCount:int = 0;
+
     for( var j:int = 0 ; j < 3 ; j ++ ){
         blueTotalCount +=blueBallCount[j];
         redTotalCount += redBallCount[j];
@@ -292,35 +313,61 @@ if(Input.GetKeyDown("z")){
     }
 
 
-    //かごのサイズ
-        if((0<=nowTime)&&(nowTime<2)){
+//     //かごのサイズ
+//         if((0<=nowTime)&&(nowTime<2)){
+//     GameObject.Find("leftBox").transform.localScale = new Vector3(12,16,12);
+//     GameObject.Find("rightBox").transform.localScale = new Vector3(12,16,12);
+// }
+//     if((48.2<=nowTime)&&(nowTime<48.3)){
+//         GameObject.Find("leftBox").transform.localScale += new Vector3(1.5/0.1*Time.deltaTime,2/0.1*Time.deltaTime,1.5/0.1*Time.deltaTime);
+//         GameObject.Find("rightBox").transform.localScale += new Vector3(1.5/0.1*Time.deltaTime,2/0.1*Time.deltaTime,1.5/0.1*Time.deltaTime);
+//     }else if((48.3<=nowTime)&&(50>nowTime)){
+//         GameObject.Find("leftBox").transform.localScale = new Vector3(13.5,18,13.5);
+//         GameObject.Find("rightBox").transform.localScale =  new Vector3(13.5,18,13.5);
+//     }else if((59.3<=nowTime)&&(nowTime<59.4)){
+//         GameObject.Find("leftBox").transform.localScale += new Vector3(1.5/0.1*Time.deltaTime,2/0.1*Time.deltaTime,1.5/0.1*Time.deltaTime);
+//         GameObject.Find("rightBox").transform.localScale += new Vector3(1.5/0.1*Time.deltaTime,2/0.1*Time.deltaTime,1.5/0.1*Time.deltaTime);
+//     }else if((59.4<=nowTime)&&(60>nowTime)){
+//         GameObject.Find("leftBox").transform.localScale = new Vector3(15,20,15);
+//         GameObject.Find("rightBox").transform.localScale = new Vector3(15,20,15);
+//     }else if((100<=nowTime)&&(101>nowTime)){
+//         GameObject.Find("leftBox").transform.localScale = new Vector3(13.5,18,13.5);
+//         GameObject.Find("rightBox").transform.localScale = new Vector3(13.5,18,13.5);
+//     }else if((127<=nowTime)&&(nowTime<127.1)){
+//         GameObject.Find("leftBox").transform.localScale += new Vector3(1.5/0.1*Time.deltaTime,2/0.1*Time.deltaTime,1.5/0.1*Time.deltaTime);
+//         GameObject.Find("rightBox").transform.localScale += new Vector3(1.5/0.1*Time.deltaTime,2/0.1*Time.deltaTime,1.5/0.1*Time.deltaTime);
+//     }else if((127.1<=nowTime)&&(128>nowTime)){
+//         GameObject.Find("leftBox").transform.localScale = new Vector3(15,20,15);
+//         GameObject.Find("rightBox").transform.localScale = new Vector3(15,20,15);
+//     }
+
+//かごのサイズ
+    if((0<=nowTime)&&(nowTime<2)){
+GameObject.Find("leftBox").transform.localScale = new Vector3(9.6,11.8,9.6);
+GameObject.Find("rightBox").transform.localScale = new Vector3(9.6,11.8,9.6);
+}
+if((48.2<=nowTime)&&(nowTime<48.3)){
+    GameObject.Find("leftBox").transform.localScale += new Vector3(1.2/0.1*Time.deltaTime,1.6/0.1*Time.deltaTime,1.2/0.1*Time.deltaTime);
+    GameObject.Find("rightBox").transform.localScale += new Vector3(1.2/0.1*Time.deltaTime,1.6/0.1*Time.deltaTime,1.2/0.1*Time.deltaTime);
+}else if((48.3<=nowTime)&&(50>nowTime)){
+    GameObject.Find("leftBox").transform.localScale = new Vector3(10.8,13.4,10.8);
+    GameObject.Find("rightBox").transform.localScale =  new Vector3(10.8,13.4,10.8);
+}else if((59.3<=nowTime)&&(nowTime<59.4)){
+    GameObject.Find("leftBox").transform.localScale += new Vector3(1.2/0.1*Time.deltaTime,1.6/0.1*Time.deltaTime,1.2/0.1*Time.deltaTime);
+    GameObject.Find("rightBox").transform.localScale += new Vector3(1.2/0.1*Time.deltaTime,1.6/0.1*Time.deltaTime,1.2/0.1*Time.deltaTime);
+}else if((59.4<=nowTime)&&(60>nowTime)){
+    GameObject.Find("leftBox").transform.localScale = new Vector3(12,16,12);
+    GameObject.Find("rightBox").transform.localScale = new Vector3(12,16,12);
+}else if((100<=nowTime)&&(101>nowTime)){
+    GameObject.Find("leftBox").transform.localScale = new Vector3(10.8,13.4,10.8);
+    GameObject.Find("rightBox").transform.localScale = new Vector3(10.8,13.4,10.8);
+}else if((127<=nowTime)&&(nowTime<127.1)){
+    GameObject.Find("leftBox").transform.localScale += new Vector3(1.2/0.1*Time.deltaTime,1.6/0.1*Time.deltaTime,1.2/0.1*Time.deltaTime);
+    GameObject.Find("rightBox").transform.localScale += new Vector3(1.2/0.1*Time.deltaTime,1.6/0.1*Time.deltaTime,1.2/0.1*Time.deltaTime);
+}else if((127.1<=nowTime)&&(128>nowTime)){
     GameObject.Find("leftBox").transform.localScale = new Vector3(12,16,12);
     GameObject.Find("rightBox").transform.localScale = new Vector3(12,16,12);
 }
-    if((48.2<=nowTime)&&(nowTime<48.3)){
-        GameObject.Find("leftBox").transform.localScale += new Vector3(1.5/0.1*Time.deltaTime,2/0.1*Time.deltaTime,1.5/0.1*Time.deltaTime);
-        GameObject.Find("rightBox").transform.localScale += new Vector3(1.5/0.1*Time.deltaTime,2/0.1*Time.deltaTime,1.5/0.1*Time.deltaTime);
-    }else if((48.3<=nowTime)&&(50>nowTime)){
-        GameObject.Find("leftBox").transform.localScale = new Vector3(13.5,18,13.5);
-        GameObject.Find("rightBox").transform.localScale =  new Vector3(13.5,18,13.5);
-    }else if((59.3<=nowTime)&&(nowTime<59.4)){
-        GameObject.Find("leftBox").transform.localScale += new Vector3(1.5/0.1*Time.deltaTime,2/0.1*Time.deltaTime,1.5/0.1*Time.deltaTime);
-        GameObject.Find("rightBox").transform.localScale += new Vector3(1.5/0.1*Time.deltaTime,2/0.1*Time.deltaTime,1.5/0.1*Time.deltaTime);
-    }else if((59.4<=nowTime)&&(60>nowTime)){
-        GameObject.Find("leftBox").transform.localScale = new Vector3(15,20,15);
-        GameObject.Find("rightBox").transform.localScale = new Vector3(15,20,15);
-    }else if((100<=nowTime)&&(101>nowTime)){
-        GameObject.Find("leftBox").transform.localScale = new Vector3(13.5,18,13.5);
-        GameObject.Find("rightBox").transform.localScale = new Vector3(13.5,18,13.5);
-    }else if((127<=nowTime)&&(nowTime<127.1)){
-        GameObject.Find("leftBox").transform.localScale += new Vector3(1.5/0.1*Time.deltaTime,2/0.1*Time.deltaTime,1.5/0.1*Time.deltaTime);
-        GameObject.Find("rightBox").transform.localScale += new Vector3(1.5/0.1*Time.deltaTime,2/0.1*Time.deltaTime,1.5/0.1*Time.deltaTime);
-    }else if((127.1<=nowTime)&&(128>nowTime)){
-        GameObject.Find("leftBox").transform.localScale = new Vector3(15,20,15);
-        GameObject.Find("rightBox").transform.localScale = new Vector3(15,20,15);
-    }
-
-
      //ボールカウントをラウンドごとにリセット
      if((114<nowTime) && ( secondRoundFlag == false)){
          secondRoundFlag = true;
@@ -428,14 +475,17 @@ if(Input.GetKeyDown("z")){
      else{
          if(!ballDeleteFlag){
          //ボールを消す
-          GameObject.Find("ballGenerator").GetComponent(BallGenerator).deleteBall();
+          //GameObject.Find("ballGenerator").GetComponent(BallGenerator).deleteBall();
          //箱の底を抜く
+         if(Input.GetKey("e")){
                       GameObject.Find("leftBox").transform.FindChild("physicalBox/bottom").gameObject.active = false;
                       GameObject.Find("leftBox").transform.FindChild("visibleBox/bottom").gameObject.active = false;
                       GameObject.Find("rightBox").transform.FindChild("physicalBox/bottom").gameObject.active = false;
                       GameObject.Find("rightBox").transform.FindChild("visibleBox/bottom").gameObject.active = false;
-                      ballDeleteFlag = true;
+
+
                   }
+              }
      }
 
 

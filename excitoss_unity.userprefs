@@ -1,9 +1,9 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/createBall.js">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/main.js">
     <Files>
-      <File FileName="Assets/Standard Assets/Effects/ToonShading/Shaders/ToonLitOutline.shader" Line="5" Column="55" />
-      <File FileName="Assets/createBall.js" Line="17" Column="35" />
+      <File FileName="Assets/Standard Assets/Effects/ToonShading/Shaders/ToonLitOutline.shader" Line="1" Column="1" />
+      <File FileName="Assets/main.js" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
